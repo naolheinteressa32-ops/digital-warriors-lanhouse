@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedGerenteRouteImport } from './routes/_authenticated/gerente'
+import { Route as AuthenticatedClientesRouteImport } from './routes/_authenticated/clientes'
 import { Route as AuthenticatedAtendenteRouteImport } from './routes/_authenticated/atendente'
 
 const LoginRoute = LoginRouteImport.update({
@@ -40,6 +41,11 @@ const AuthenticatedGerenteRoute = AuthenticatedGerenteRouteImport.update({
   path: '/gerente',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedClientesRoute = AuthenticatedClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAtendenteRoute = AuthenticatedAtendenteRouteImport.update({
   id: '/atendente',
   path: '/atendente',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/atendente': typeof AuthenticatedAtendenteRoute
+  '/clientes': typeof AuthenticatedClientesRoute
   '/gerente': typeof AuthenticatedGerenteRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/atendente': typeof AuthenticatedAtendenteRoute
+  '/clientes': typeof AuthenticatedClientesRoute
   '/gerente': typeof AuthenticatedGerenteRoute
 }
 export interface FileRoutesById {
@@ -67,13 +75,14 @@ export interface FileRoutesById {
   '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/_authenticated/atendente': typeof AuthenticatedAtendenteRoute
+  '/_authenticated/clientes': typeof AuthenticatedClientesRoute
   '/_authenticated/gerente': typeof AuthenticatedGerenteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login' | '/atendente' | '/gerente'
+  fullPaths: '/' | '/app' | '/login' | '/atendente' | '/clientes' | '/gerente'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/login' | '/atendente' | '/gerente'
+  to: '/' | '/app' | '/login' | '/atendente' | '/clientes' | '/gerente'
   id:
     | '__root__'
     | '/'
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/_authenticated/atendente'
+    | '/_authenticated/clientes'
     | '/_authenticated/gerente'
   fileRoutesById: FileRoutesById
 }
@@ -128,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGerenteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/clientes': {
+      id: '/_authenticated/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof AuthenticatedClientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/atendente': {
       id: '/_authenticated/atendente'
       path: '/atendente'
@@ -140,11 +157,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAtendenteRoute: typeof AuthenticatedAtendenteRoute
+  AuthenticatedClientesRoute: typeof AuthenticatedClientesRoute
   AuthenticatedGerenteRoute: typeof AuthenticatedGerenteRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAtendenteRoute: AuthenticatedAtendenteRoute,
+  AuthenticatedClientesRoute: AuthenticatedClientesRoute,
   AuthenticatedGerenteRoute: AuthenticatedGerenteRoute,
 }
 
