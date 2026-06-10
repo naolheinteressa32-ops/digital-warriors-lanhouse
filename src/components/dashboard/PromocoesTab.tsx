@@ -43,9 +43,10 @@ export function PromocoesTab() {
       valid_from: form.valid_from ? new Date(form.valid_from).toISOString() : null,
       valid_until: form.valid_until ? new Date(form.valid_until).toISOString() : null,
     };
+    const client = supabase as unknown as { from: (t: string) => any };
     const q = editing
-      ? supabase.from("promotions" as never).update(payload).eq("id", editing.id)
-      : supabase.from("promotions" as never).insert(payload);
+      ? client.from("promotions").update(payload).eq("id", editing.id)
+      : client.from("promotions").insert(payload);
     const { error } = await q;
     setSaving(false);
     if (error) { toast.error("Erro", { description: error.message }); return; }
