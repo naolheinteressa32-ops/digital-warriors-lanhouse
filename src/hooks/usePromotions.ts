@@ -19,8 +19,9 @@ export function usePromotions() {
   useEffect(() => {
     let mounted = true;
     const fetchAll = async () => {
-      const { data: rows } = await supabase
-        .from("promotions" as never)
+      const client = supabase as unknown as { from: (t: string) => { select: (c: string) => { order: (c: string, opts: { ascending: boolean }) => Promise<{ data: Promotion[] | null }> } } };
+      const { data: rows } = await client
+        .from("promotions")
         .select("*")
         .order("created_at", { ascending: false });
       if (mounted && rows) setData(rows as unknown as Promotion[]);
