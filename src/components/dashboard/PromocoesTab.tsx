@@ -43,11 +43,9 @@ export function PromocoesTab() {
       valid_from: form.valid_from ? new Date(form.valid_from).toISOString() : null,
       valid_until: form.valid_until ? new Date(form.valid_until).toISOString() : null,
     };
-    const client = supabase as unknown as { from: (t: string) => any };
-    const q = editing
-      ? client.from("promotions").update(payload).eq("id", editing.id)
-      : client.from("promotions").insert(payload);
-    const { error } = await q;
+    const { error } = editing
+      ? await supabase.from("promotions").update(payload).eq("id", editing.id)
+      : await supabase.from("promotions").insert(payload);
     setSaving(false);
     if (error) { toast.error("Erro", { description: error.message }); return; }
     toast.success(editing ? "Promoção atualizada" : "Promoção criada");
@@ -55,8 +53,8 @@ export function PromocoesTab() {
   };
 
   const remove = async (p: Promotion) => {
-    const client = supabase as unknown as { from: (t: string) => any };
-    const { error } = await client.from("promotions").delete().eq("id", p.id);
+    if (!confirm(`Remover promoção "${p.name}"?`)) return;
+    const { error } = await supabase.from("promotions").delete().eq("id", p.id);
     if (error) toast.error("Erro", { description: error.message });
     else toast.success("Removida");
   };

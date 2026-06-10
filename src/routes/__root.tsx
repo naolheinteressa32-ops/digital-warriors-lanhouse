@@ -28,11 +28,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }),
   shellComponent: RootShell,
   component: RootComponent,
+  errorComponent: ({ error, reset }: { error: Error; reset: () => void }) => (
+    <div className="flex min-h-screen items-center justify-center p-6">
+      <div className="text-center max-w-md space-y-3">
+        <h1 className="text-3xl font-bold text-destructive">Erro inesperado</h1>
+        <p className="text-sm text-muted-foreground break-words">{error?.message ?? "Algo deu errado."}</p>
+        <button onClick={reset} className="mt-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90">
+          Tentar novamente
+        </button>
+      </div>
+    </div>
+  ),
   notFoundComponent: () => (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
         <h1 className="text-4xl font-bold">404</h1>
         <p className="text-muted-foreground mt-2">Página não encontrada</p>
+        <a href="/login" className="inline-block mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Voltar ao início</a>
       </div>
     </div>
   ),
