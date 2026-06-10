@@ -14,7 +14,201 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      customers: {
+        Row: {
+          cpf: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+        }
+        Insert: {
+          cpf?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+        }
+        Update: {
+          cpf?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      equipments: {
+        Row: {
+          created_at: string
+          hourly_rate: number
+          id: string
+          last_maintenance: string | null
+          name: string
+          specs: string | null
+          status: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          hourly_rate: number
+          id?: string
+          last_maintenance?: string | null
+          name: string
+          specs?: string | null
+          status?: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          hourly_rate?: number
+          id?: string
+          last_maintenance?: string | null
+          name?: string
+          specs?: string | null
+          status?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name: string
+          role: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id: string
+          name: string
+          role?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          role?: string
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          attendant_id: string
+          customer_id: string | null
+          customer_name: string | null
+          discount: number
+          duration_minutes: number
+          ended_at: string | null
+          ends_at: string
+          equipment_id: string
+          equipment_name: string | null
+          equipment_type: string | null
+          hourly_rate: number | null
+          id: string
+          payment_method: string | null
+          started_at: string
+          status: string
+          value: number
+        }
+        Insert: {
+          attendant_id: string
+          customer_id?: string | null
+          customer_name?: string | null
+          discount?: number
+          duration_minutes: number
+          ended_at?: string | null
+          ends_at: string
+          equipment_id: string
+          equipment_name?: string | null
+          equipment_type?: string | null
+          hourly_rate?: number | null
+          id?: string
+          payment_method?: string | null
+          started_at?: string
+          status?: string
+          value: number
+        }
+        Update: {
+          attendant_id?: string
+          customer_id?: string | null
+          customer_name?: string | null
+          discount?: number
+          duration_minutes?: number
+          ended_at?: string | null
+          ends_at?: string
+          equipment_id?: string
+          equipment_name?: string | null
+          equipment_type?: string | null
+          hourly_rate?: number | null
+          id?: string
+          payment_method?: string | null
+          started_at?: string
+          status?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_attendant_id_fkey"
+            columns: ["attendant_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waiting_list: {
+        Row: {
+          customer_id: string | null
+          customer_name: string | null
+          entered_at: string
+          id: string
+          position: number
+        }
+        Insert: {
+          customer_id?: string | null
+          customer_name?: string | null
+          entered_at?: string
+          id?: string
+          position: number
+        }
+        Update: {
+          customer_id?: string | null
+          customer_name?: string | null
+          entered_at?: string
+          id?: string
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waiting_list_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
