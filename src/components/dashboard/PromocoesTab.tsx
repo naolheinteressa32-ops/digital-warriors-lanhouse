@@ -55,7 +55,8 @@ export function PromocoesTab() {
   };
 
   const remove = async (p: Promotion) => {
-    const { error } = await supabase.from("promotions" as never).delete().eq("id", p.id);
+    const client = supabase as unknown as { from: (t: string) => any };
+    const { error } = await client.from("promotions").delete().eq("id", p.id);
     if (error) toast.error("Erro", { description: error.message });
     else toast.success("Removida");
   };
