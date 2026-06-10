@@ -9,6 +9,7 @@ interface NavItem { to: string; label: string; icon: React.ComponentType<{ class
 
 const NAV: NavItem[] = [
   { to: "/atendente", label: "Atendimento", icon: LayoutDashboard, roles: ["attendant", "manager"] },
+  { to: "/clientes", label: "Clientes", icon: Users, roles: ["attendant", "manager"] },
   { to: "/gerente", label: "Gerência", icon: BarChart3, roles: ["manager"] },
 ];
 
