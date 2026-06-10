@@ -28,7 +28,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }),
   shellComponent: RootShell,
   component: RootComponent,
-  defaultErrorComponent: ({ error, reset }) => (
+  errorComponent: ({ error, reset }: { error: Error; reset: () => void }) => (
     <div className="flex min-h-screen items-center justify-center p-6">
       <div className="text-center max-w-md space-y-3">
         <h1 className="text-3xl font-bold text-destructive">Erro inesperado</h1>
