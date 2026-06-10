@@ -13,6 +13,8 @@ import { formatBRL, formatCPF, onlyDigits } from "@/lib/format";
 import { toast } from "sonner";
 import { Loader2, Search, UserPlus, UserRound } from "lucide-react";
 import { CustomerDialog } from "@/components/customers/CustomerDialog";
+import { usePromotions } from "@/hooks/usePromotions";
+import { computePromotion } from "@/lib/promotions";
 
 interface Props {
   equipment: Equipment | null;
