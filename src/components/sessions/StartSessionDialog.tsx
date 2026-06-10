@@ -94,6 +94,7 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
       duration_minutes: minutes,
       hourly_rate: equipment.hourly_rate,
       value,
+      discount: applied.discount,
       status: "active",
     });
 
