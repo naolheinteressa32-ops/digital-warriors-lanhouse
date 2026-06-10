@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
-export interface Promotion {
-  id: string;
-  name: string;
-  description: string | null;
-  percent_off: number;
-  active: boolean;
-  valid_from: string | null;
-  valid_until: string | null;
-  created_at: string;
-}
+export type Promotion = Database["public"]["Tables"]["promotions"]["Row"];
 
 export function usePromotions() {
   const [data, setData] = useState<Promotion[]>([]);
@@ -19,12 +11,11 @@ export function usePromotions() {
   useEffect(() => {
     let mounted = true;
     const fetchAll = async () => {
-      const client = supabase as unknown as { from: (t: string) => { select: (c: string) => { order: (c: string, opts: { ascending: boolean }) => Promise<{ data: Promotion[] | null }> } } };
-      const { data: rows } = await client
+      const { data: rows } = await supabase
         .from("promotions")
         .select("*")
         .order("created_at", { ascending: false });
-      if (mounted && rows) setData(rows as unknown as Promotion[]);
+      if (mounted && rows) setData(rows);
       setLoading(false);
     };
     fetchAll();
