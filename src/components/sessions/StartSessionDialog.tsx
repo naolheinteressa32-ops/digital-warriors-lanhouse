@@ -184,9 +184,23 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
               </Select>
             </div>
 
-            <div className="rounded-lg bg-muted p-4 flex justify-between items-center">
-              <div className="text-sm text-muted-foreground">Valor</div>
-              <div className="text-2xl font-bold text-primary">{formatBRL(value)}</div>
+            <div className="rounded-lg bg-muted p-4 space-y-2">
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-muted-foreground">Valor</div>
+                <div className={`text-base ${applied.discount > 0 ? "line-through text-muted-foreground" : "text-2xl font-bold text-primary"}`}>{formatBRL(value)}</div>
+              </div>
+              {applied.promotion && (
+                <>
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="text-muted-foreground">Desconto ({applied.percent.toFixed(0)}%) — {applied.promotion.name}</div>
+                    <div className="text-destructive font-medium">- {formatBRL(applied.discount)}</div>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-border">
+                    <div className="text-sm font-medium">Total</div>
+                    <div className="text-2xl font-bold text-primary">{formatBRL(applied.finalValue)}</div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
