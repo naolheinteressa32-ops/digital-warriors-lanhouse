@@ -9,6 +9,7 @@ import { FinanceiroTab } from "@/components/dashboard/FinanceiroTab";
 import { HistoricoTab } from "@/components/dashboard/HistoricoTab";
 import { RelatoriosTab } from "@/components/dashboard/RelatoriosTab";
 import { PromocoesTab } from "@/components/dashboard/PromocoesTab";
+import { AnalyticsTab } from "@/components/dashboard/AnalyticsTab";
 
 export const Route = createFileRoute("/_authenticated/gerente")({
   head: () => ({ meta: [{ title: "Gerência — CyberLAN Manager" }] }),
