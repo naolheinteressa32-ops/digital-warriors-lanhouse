@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedGerenteRouteImport } from './routes/_authenticated/gerente'
@@ -18,6 +19,11 @@ import { Route as AuthenticatedAtendenteRouteImport } from './routes/_authentica
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -42,12 +48,14 @@ const AuthenticatedAtendenteRoute = AuthenticatedAtendenteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/atendente': typeof AuthenticatedAtendenteRoute
   '/gerente': typeof AuthenticatedGerenteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/atendente': typeof AuthenticatedAtendenteRoute
   '/gerente': typeof AuthenticatedGerenteRoute
@@ -56,19 +64,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/app': typeof AppRoute
   '/login': typeof LoginRoute
   '/_authenticated/atendente': typeof AuthenticatedAtendenteRoute
   '/_authenticated/gerente': typeof AuthenticatedGerenteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/atendente' | '/gerente'
+  fullPaths: '/' | '/app' | '/login' | '/atendente' | '/gerente'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/atendente' | '/gerente'
+  to: '/' | '/app' | '/login' | '/atendente' | '/gerente'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/app'
     | '/login'
     | '/_authenticated/atendente'
     | '/_authenticated/gerente'
@@ -77,6 +87,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AppRoute: typeof AppRoute
   LoginRoute: typeof LoginRoute
 }
 
@@ -87,6 +98,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -136,6 +154,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AppRoute: AppRoute,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
