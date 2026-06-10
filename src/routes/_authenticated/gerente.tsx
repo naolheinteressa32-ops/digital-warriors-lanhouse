@@ -38,6 +38,7 @@ function GerentePage() {
           <TabsTrigger value="promo">Promoções</TabsTrigger>
         </TabsList>
         <TabsContent value="overview"><OverviewManager /></TabsContent>
+        <TabsContent value="analytics"><AnalyticsTab /></TabsContent>
         <TabsContent value="sessions"><ActiveSessionsTab /></TabsContent>
         <TabsContent value="equipments"><EquipmentsGrid allowMaintenance /></TabsContent>
         <TabsContent value="customers"><CustomersTab /></TabsContent>
