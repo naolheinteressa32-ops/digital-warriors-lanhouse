@@ -65,6 +65,7 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
   if (!equipment) return null;
 
   const value = (Number(equipment.hourly_rate) * minutes) / 60;
+  const applied = computePromotion(value, promotions);
   const selectedCustomer = customers.find((c) => c.id === customerId);
 
   const handleStart = async () => {
