@@ -26,6 +26,7 @@ type Mode = "registered" | "walkin";
 
 export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
   const { user } = useAuth();
+  const { promotions } = usePromotions();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [mode, setMode] = useState<Mode>("walkin");
   const [search, setSearch] = useState("");
