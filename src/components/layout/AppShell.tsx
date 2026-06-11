@@ -1,9 +1,10 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Monitor, LayoutDashboard, LogOut, Users, BarChart3 } from "lucide-react";
+import { LayoutDashboard, LogOut, Users, BarChart3 } from "lucide-react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
+import logo from "@/assets/logo.png";
 
 interface NavItem { to: string; label: string; icon: React.ComponentType<{ className?: string }>; roles: ("attendant" | "manager")[]; }
 
