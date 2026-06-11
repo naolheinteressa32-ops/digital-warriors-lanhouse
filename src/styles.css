@@ -73,3 +73,16 @@
   html, body { background-color: var(--color-background); color: var(--color-foreground); }
   body { font-family: var(--font-sans); }
 }
+
+@media print {
+  body * { visibility: hidden !important; }
+  [data-print-receipt], [data-print-receipt] * { visibility: visible !important; }
+  [data-print-receipt] {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    background: #fff !important;
+    color: #000 !important;
+    padding: 24px !important;
+  }
+}
