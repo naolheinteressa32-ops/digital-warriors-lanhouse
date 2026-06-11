@@ -11,7 +11,7 @@ import { Search, Plus, Pencil, History, Loader2, UserRound } from "lucide-react"
 import { formatCPF, formatPhone, onlyDigits } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/clientes")({
-  head: () => ({ meta: [{ title: "Clientes — CyberLAN Manager" }] }),
+  head: () => ({ meta: [{ title: "Clientes — Digital Warriors Manager" }] }),
   component: ClientesPage,
 });
 
