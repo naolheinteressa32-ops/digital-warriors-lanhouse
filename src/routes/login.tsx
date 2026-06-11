@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Loader2, Monitor } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Entrar — CyberLAN" }] }),
+  head: () => ({ meta: [{ title: "Entrar — Digital Warriors" }] }),
   component: LoginPage,
 });
 
@@ -31,7 +32,7 @@ function LoginPage() {
       toast.error("Falha no login", { description: error });
       return;
     }
-    toast.success("Bem-vindo ao CyberLAN");
+    toast.success("Bem-vindo ao Digital Warriors");
     navigate({ to: "/app" });
   };
 
@@ -39,10 +40,10 @@ function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4 bg-background">
       <Card className="w-full max-w-md p-8 rounded-xl">
         <div className="flex flex-col items-center mb-8">
-          <div className="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
-            <Monitor className="size-7 text-primary" />
+          <div className="size-20 rounded-xl bg-primary/10 flex items-center justify-center mb-3 overflow-hidden">
+            <img src={logo} alt="Digital Warriors" className="size-16 object-contain" width={64} height={64} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">CyberLAN</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Digital Warriors</h1>
           <p className="text-sm text-muted-foreground mt-1">Gestão de lan house</p>
         </div>
 
@@ -66,7 +67,7 @@ function LoginPage() {
         </form>
 
         <p className="text-xs text-muted-foreground text-center mt-6">
-          CyberLAN © 2026
+          Digital Warriors © 2026
         </p>
       </Card>
     </div>

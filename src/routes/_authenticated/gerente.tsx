@@ -12,7 +12,7 @@ import { PromocoesTab } from "@/components/dashboard/PromocoesTab";
 import { AnalyticsTab } from "@/components/dashboard/AnalyticsTab";
 
 export const Route = createFileRoute("/_authenticated/gerente")({
-  head: () => ({ meta: [{ title: "Gerência — CyberLAN Manager" }] }),
+  head: () => ({ meta: [{ title: "Gerência — Digital Warriors Manager" }] }),
   component: GerentePage,
 });
 
@@ -21,7 +21,7 @@ function GerentePage() {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Gerência</h1>
-        <p className="text-sm text-muted-foreground">Visão completa da operação CyberLAN</p>
+        <p className="text-sm text-muted-foreground">Visão completa da operação Digital Warriors</p>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">

@@ -1,1 +1,1 @@
-CyberLAN, sistema de gerenciamento para Lan House.
+Digital Warriors, sistema de gerenciamento para Lan House.

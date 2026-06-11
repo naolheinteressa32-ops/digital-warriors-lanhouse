@@ -1,9 +1,10 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Monitor, LayoutDashboard, LogOut, Users, BarChart3 } from "lucide-react";
+import { LayoutDashboard, LogOut, Users, BarChart3 } from "lucide-react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
+import logo from "@/assets/logo.png";
 
 interface NavItem { to: string; label: string; icon: React.ComponentType<{ className?: string }>; roles: ("attendant" | "manager")[]; }
 
@@ -31,11 +32,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex w-full bg-background text-foreground">
       <aside className="w-64 shrink-0 bg-sidebar text-sidebar-foreground border-r border-border flex flex-col">
         <div className="px-5 py-5 border-b border-border flex items-center gap-2">
-          <div className="size-9 rounded-lg bg-primary/15 flex items-center justify-center">
-            <Monitor className="size-5 text-primary" />
+          <div className="size-9 rounded-lg bg-primary/15 flex items-center justify-center overflow-hidden">
+            <img src={logo} alt="Digital Warriors" className="size-8 object-contain" width={32} height={32} />
           </div>
           <div>
-            <div className="font-bold leading-tight">CyberLAN</div>
+            <div className="font-bold leading-tight">Digital Warriors</div>
             <div className="text-xs text-muted-foreground">Manager</div>
           </div>
         </div>
@@ -77,7 +78,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 overflow-auto">{children}</main>
         <footer className="text-xs text-muted-foreground px-6 py-3 border-t border-border">
-          CyberLAN © 2026
+          Digital Warriors © 2026
         </footer>
       </div>
     </div>
