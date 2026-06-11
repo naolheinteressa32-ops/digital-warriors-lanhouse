@@ -7,7 +7,7 @@ import { ActiveSessionsTab } from "@/components/dashboard/ActiveSessionsTab";
 import { WaitingListTab } from "@/components/dashboard/WaitingListTab";
 
 export const Route = createFileRoute("/_authenticated/atendente")({
-  head: () => ({ meta: [{ title: "Atendimento — CyberLAN Manager" }] }),
+  head: () => ({ meta: [{ title: "Atendimento — Digital Warriors Manager" }] }),
   component: AtendentePage,
 });
 
