@@ -32,11 +32,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex w-full bg-background text-foreground">
       <aside className="w-64 shrink-0 bg-sidebar text-sidebar-foreground border-r border-border flex flex-col">
         <div className="px-5 py-5 border-b border-border flex items-center gap-2">
-          <div className="size-9 rounded-lg bg-primary/15 flex items-center justify-center">
-            <Monitor className="size-5 text-primary" />
+          <div className="size-9 rounded-lg bg-primary/15 flex items-center justify-center overflow-hidden">
+            <img src={logo} alt="Digital Warriors" className="size-8 object-contain" width={32} height={32} />
           </div>
           <div>
-            <div className="font-bold leading-tight">CyberLAN</div>
+            <div className="font-bold leading-tight">Digital Warriors</div>
             <div className="text-xs text-muted-foreground">Manager</div>
           </div>
         </div>
