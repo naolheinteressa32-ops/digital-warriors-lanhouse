@@ -78,7 +78,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 overflow-auto">{children}</main>
         <footer className="text-xs text-muted-foreground px-6 py-3 border-t border-border">
-          CyberLAN © 2026
+          Digital Warriors © 2026
         </footer>
       </div>
     </div>
