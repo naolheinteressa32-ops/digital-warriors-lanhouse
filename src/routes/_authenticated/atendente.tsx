@@ -7,6 +7,8 @@ import { ActiveSessionsTab } from "@/components/dashboard/ActiveSessionsTab";
 import { WaitingListTab } from "@/components/dashboard/WaitingListTab";
 import { HistoricoTab } from "@/components/dashboard/HistoricoTab";
 import { MovimentoTab } from "@/components/dashboard/MovimentoTab";
+import { CaixaTab } from "@/components/dashboard/CaixaTab";
+import { RelatoriosInternosTab } from "@/components/dashboard/RelatoriosInternosTab";
 
 export const Route = createFileRoute("/_authenticated/atendente")({
   head: () => ({ meta: [{ title: "Atendimento — Digital Warriors Manager" }] }),
@@ -29,6 +31,8 @@ function AtendentePage() {
           <TabsTrigger value="customers">Clientes</TabsTrigger>
           <TabsTrigger value="sessions">Sessões</TabsTrigger>
           <TabsTrigger value="waiting">Fila de Espera</TabsTrigger>
+          <TabsTrigger value="caixa">Caixa</TabsTrigger>
+          <TabsTrigger value="reports">Relatórios</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>
         <TabsContent value="overview"><OverviewAttendant /></TabsContent>
@@ -37,6 +41,8 @@ function AtendentePage() {
         <TabsContent value="customers"><CustomersTab /></TabsContent>
         <TabsContent value="sessions"><ActiveSessionsTab /></TabsContent>
         <TabsContent value="waiting"><WaitingListTab /></TabsContent>
+        <TabsContent value="caixa"><CaixaTab /></TabsContent>
+        <TabsContent value="reports"><RelatoriosInternosTab /></TabsContent>
         <TabsContent value="history"><HistoricoTab /></TabsContent>
       </Tabs>
     </div>
