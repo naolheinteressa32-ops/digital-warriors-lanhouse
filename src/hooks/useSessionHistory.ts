@@ -1,0 +1,34 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@/types";
+
+export function useSessionHistory(days = 30) {
+  const [data, setData] = useState<Session[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchAll = async () => {
+      setLoading(true);
+      const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+      const { data: rows, error: err } = await supabase
+        .from("sessions").select("*")
+        .gte("started_at", since)
+        .order("started_at", { ascending: false })
+        .limit(2000);
+      if (!mounted) return;
+      if (err) setError(err.message);
+      else setData(rows ?? []);
+      setLoading(false);
+    };
+    fetchAll();
+    const channel = supabase
+      .channel(`session-history-${days}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "sessions" }, () => fetchAll())
+      .subscribe();
+    return () => { mounted = false; supabase.removeChannel(channel); };
+  }, [days]);
+
+  return { sessions: data, loading, error };
+}
