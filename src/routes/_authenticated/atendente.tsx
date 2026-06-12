@@ -5,6 +5,8 @@ import { EquipmentsGrid } from "@/components/dashboard/EquipmentsGrid";
 import { CustomersTab } from "@/components/dashboard/CustomersTab";
 import { ActiveSessionsTab } from "@/components/dashboard/ActiveSessionsTab";
 import { WaitingListTab } from "@/components/dashboard/WaitingListTab";
+import { HistoricoTab } from "@/components/dashboard/HistoricoTab";
+import { MovimentoTab } from "@/components/dashboard/MovimentoTab";
 
 export const Route = createFileRoute("/_authenticated/atendente")({
   head: () => ({ meta: [{ title: "Atendimento — Digital Warriors Manager" }] }),
