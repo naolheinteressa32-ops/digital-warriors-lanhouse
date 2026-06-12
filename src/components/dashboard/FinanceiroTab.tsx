@@ -42,13 +42,24 @@ export function FinanceiroTab() {
     }
     const series = Object.values(daily);
 
-    // Payment method breakdown
-    const byMethod: Record<string, number> = {};
+    // Payment method breakdown — revenue, count, ticket avg, % share
+    const byMethod: Record<string, { revenue: number; count: number }> = {};
     for (const s of sessions) {
       const m = s.payment_method ?? "—";
-      byMethod[m] = (byMethod[m] ?? 0) + Number(s.value) - Number(s.discount);
+      const v = Number(s.value) - Number(s.discount);
+      if (!byMethod[m]) byMethod[m] = { revenue: 0, count: 0 };
+      byMethod[m].revenue += v;
+      byMethod[m].count += 1;
     }
-    const methods = Object.entries(byMethod).map(([name, value]) => ({ name, value }));
+    const methods = Object.entries(byMethod)
+      .map(([name, { revenue, count }]) => ({
+        name,
+        revenue,
+        count,
+        ticket: count ? revenue / count : 0,
+        share: total ? (revenue / total) * 100 : 0,
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
 
     return { pcRevenue, coRevenue, total, totalDiscount, ticket, series, methods };
   }, [sessions, days]);
@@ -135,13 +146,29 @@ export function FinanceiroTab() {
             {data.methods.length === 0 ? (
               <div className="text-sm text-muted-foreground">Sem dados.</div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {data.methods.map((m) => (
-                  <div key={m.name} className="p-3 rounded-lg bg-muted/30">
-                    <div className="text-xs text-muted-foreground uppercase">{m.name}</div>
-                    <div className="font-semibold mt-1">{formatBRL(m.value)}</div>
-                  </div>
-                ))}
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="text-xs text-muted-foreground uppercase">
+                    <tr>
+                      <th className="text-left p-2">Método</th>
+                      <th className="text-right p-2">Receita</th>
+                      <th className="text-right p-2">Transações</th>
+                      <th className="text-right p-2">Ticket médio</th>
+                      <th className="text-right p-2">Participação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.methods.map((m) => (
+                      <tr key={m.name} className="border-t border-border">
+                        <td className="p-2 uppercase font-medium">{m.name}</td>
+                        <td className="p-2 text-right">{formatBRL(m.revenue)}</td>
+                        <td className="p-2 text-right">{m.count}</td>
+                        <td className="p-2 text-right">{formatBRL(m.ticket)}</td>
+                        <td className="p-2 text-right">{m.share.toFixed(1)}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </Card>

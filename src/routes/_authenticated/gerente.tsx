@@ -10,6 +10,7 @@ import { HistoricoTab } from "@/components/dashboard/HistoricoTab";
 import { RelatoriosTab } from "@/components/dashboard/RelatoriosTab";
 import { PromocoesTab } from "@/components/dashboard/PromocoesTab";
 import { AnalyticsTab } from "@/components/dashboard/AnalyticsTab";
+import { MovimentoTab } from "@/components/dashboard/MovimentoTab";
 
 export const Route = createFileRoute("/_authenticated/gerente")({
   head: () => ({ meta: [{ title: "Gerência — Digital Warriors Manager" }] }),
@@ -27,6 +28,7 @@ function GerentePage() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="movimento">Movimento</TabsTrigger>
           <TabsTrigger value="analytics">Análises</TabsTrigger>
           <TabsTrigger value="sessions">Sessões</TabsTrigger>
           <TabsTrigger value="equipments">Equipamentos</TabsTrigger>
@@ -38,6 +40,7 @@ function GerentePage() {
           <TabsTrigger value="promo">Promoções</TabsTrigger>
         </TabsList>
         <TabsContent value="overview"><OverviewManager /></TabsContent>
+        <TabsContent value="movimento"><MovimentoTab /></TabsContent>
         <TabsContent value="analytics"><AnalyticsTab /></TabsContent>
         <TabsContent value="sessions"><ActiveSessionsTab /></TabsContent>
         <TabsContent value="equipments"><EquipmentsGrid allowMaintenance /></TabsContent>
