@@ -24,16 +24,20 @@ function AtendentePage() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="movimento">Movimento</TabsTrigger>
           <TabsTrigger value="equipments">Equipamentos</TabsTrigger>
           <TabsTrigger value="customers">Clientes</TabsTrigger>
           <TabsTrigger value="sessions">Sessões</TabsTrigger>
           <TabsTrigger value="waiting">Fila de Espera</TabsTrigger>
+          <TabsTrigger value="history">Histórico</TabsTrigger>
         </TabsList>
         <TabsContent value="overview"><OverviewAttendant /></TabsContent>
+        <TabsContent value="movimento"><MovimentoTab /></TabsContent>
         <TabsContent value="equipments"><EquipmentsGrid /></TabsContent>
         <TabsContent value="customers"><CustomersTab /></TabsContent>
         <TabsContent value="sessions"><ActiveSessionsTab /></TabsContent>
         <TabsContent value="waiting"><WaitingListTab /></TabsContent>
+        <TabsContent value="history"><HistoricoTab /></TabsContent>
       </Tabs>
     </div>
   );
