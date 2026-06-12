@@ -10,6 +10,7 @@ import { HistoricoTab } from "@/components/dashboard/HistoricoTab";
 import { RelatoriosTab } from "@/components/dashboard/RelatoriosTab";
 import { PromocoesTab } from "@/components/dashboard/PromocoesTab";
 import { AnalyticsTab } from "@/components/dashboard/AnalyticsTab";
+import { MovimentoTab } from "@/components/dashboard/MovimentoTab";
 
 export const Route = createFileRoute("/_authenticated/gerente")({
   head: () => ({ meta: [{ title: "Gerência — Digital Warriors Manager" }] }),
