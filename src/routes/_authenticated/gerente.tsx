@@ -28,6 +28,7 @@ function GerentePage() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="movimento">Movimento</TabsTrigger>
           <TabsTrigger value="analytics">Análises</TabsTrigger>
           <TabsTrigger value="sessions">Sessões</TabsTrigger>
           <TabsTrigger value="equipments">Equipamentos</TabsTrigger>
