@@ -5,6 +5,9 @@ export type Customer = Database["public"]["Tables"]["customers"]["Row"];
 export type Equipment = Database["public"]["Tables"]["equipments"]["Row"];
 export type Session = Database["public"]["Tables"]["sessions"]["Row"];
 export type WaitingListRow = Database["public"]["Tables"]["waiting_list"]["Row"];
+export type CashRegister = Database["public"]["Tables"]["cash_registers"]["Row"];
+export type EmployeeReport = Database["public"]["Tables"]["employee_reports"]["Row"];
+export type ReportType = "observation" | "problem" | "suggestion";
 
 export type EquipmentType = "computer" | "console";
 export type EquipmentStatus = "free" | "in_use" | "maintenance";

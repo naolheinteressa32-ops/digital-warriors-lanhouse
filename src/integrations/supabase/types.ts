@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      cash_registers: {
+        Row: {
+          attendant_id: string
+          closed_at: string | null
+          closed_by: string | null
+          counted_amount: number | null
+          created_at: string
+          difference: number | null
+          expected_amount: number | null
+          id: string
+          notes: string | null
+          opened_at: string
+          opening_amount: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attendant_id: string
+          closed_at?: string | null
+          closed_by?: string | null
+          counted_amount?: number | null
+          created_at?: string
+          difference?: number | null
+          expected_amount?: number | null
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opening_amount?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attendant_id?: string
+          closed_at?: string | null
+          closed_by?: string | null
+          counted_amount?: number | null
+          created_at?: string
+          difference?: number | null
+          expected_amount?: number | null
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opening_amount?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           cpf: string | null
@@ -38,6 +86,45 @@ export type Database = {
           id?: string
           name?: string
           phone?: string | null
+        }
+        Relationships: []
+      }
+      employee_reports: {
+        Row: {
+          author_id: string
+          created_at: string
+          id: string
+          message: string
+          read: boolean
+          read_at: string | null
+          read_by: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean
+          read_at?: string | null
+          read_by?: string | null
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean
+          read_at?: string | null
+          read_by?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
         }
         Relationships: []
       }
