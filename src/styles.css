@@ -2,7 +2,8 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark, .dark *));
+@custom-variant light (&:is(.light, .light *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -66,6 +67,45 @@
   --ring: oklch(0.62 0.22 270);
   --sidebar: oklch(0.21 0.025 265);
   --sidebar-foreground: oklch(0.96 0.01 250);
+}
+
+/* Digital Warriors — light theme */
+.light {
+  --background: oklch(0.99 0.005 250);
+  --foreground: oklch(0.2 0.02 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.02 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.02 265);
+  --primary: oklch(0.55 0.22 270);
+  --primary-foreground: oklch(0.99 0.005 250);
+  --secondary: oklch(0.68 0.19 50);
+  --secondary-foreground: oklch(0.18 0.02 265);
+  --muted: oklch(0.96 0.01 250);
+  --muted-foreground: oklch(0.45 0.02 255);
+  --accent: oklch(0.6 0.23 25);
+  --accent-foreground: oklch(0.99 0.005 250);
+  --destructive: oklch(0.58 0.24 25);
+  --destructive-foreground: oklch(0.99 0.005 250);
+  --success: oklch(0.6 0.18 145);
+  --success-foreground: oklch(0.99 0.005 250);
+  --warning: oklch(0.72 0.17 75);
+  --warning-foreground: oklch(0.2 0.02 265);
+  --border: oklch(0.9 0.01 250);
+  --input: oklch(0.94 0.01 250);
+  --ring: oklch(0.55 0.22 270);
+  --sidebar: oklch(0.97 0.008 250);
+  --sidebar-foreground: oklch(0.2 0.02 265);
+}
+
+/* Chart palette — Digital Warriors identity */
+:root {
+  --chart-1: oklch(0.62 0.22 270);  /* primary blue */
+  --chart-2: oklch(0.72 0.18 50);   /* secondary orange */
+  --chart-3: oklch(0.65 0.23 25);   /* accent red */
+  --chart-4: oklch(0.7 0.18 145);   /* success green */
+  --chart-5: oklch(0.78 0.16 75);   /* warning yellow */
+  --chart-6: oklch(0.65 0.2 310);   /* magenta */
 }
 
 @layer base {

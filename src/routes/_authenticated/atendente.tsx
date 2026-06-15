@@ -17,14 +17,14 @@ export const Route = createFileRoute("/_authenticated/atendente")({
 
 function AtendentePage() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Atendimento</h1>
         <p className="text-sm text-muted-foreground">Dashboard do atendente — gerencie sessões em tempo real</p>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="flex-wrap h-auto">
+        <TabsList className="flex w-full overflow-x-auto flex-nowrap md:flex-wrap h-auto justify-start">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="movimento">Movimento</TabsTrigger>
           <TabsTrigger value="equipments">Equipamentos</TabsTrigger>

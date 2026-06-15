@@ -21,14 +21,14 @@ export const Route = createFileRoute("/_authenticated/gerente")({
 
 function GerentePage() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Gerência</h1>
         <p className="text-sm text-muted-foreground">Visão completa da operação Digital Warriors</p>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="flex-wrap h-auto">
+        <TabsList className="flex w-full overflow-x-auto flex-nowrap md:flex-wrap h-auto justify-start">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="movimento">Movimento</TabsTrigger>
           <TabsTrigger value="analytics">Análises</TabsTrigger>
