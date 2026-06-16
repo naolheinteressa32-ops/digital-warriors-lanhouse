@@ -161,27 +161,155 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          notes: string | null
+          occurred_at: string
+          payment_method: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          notes?: string | null
+          occurred_at?: string
+          payment_method?: string | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          notes?: string | null
+          occurred_at?: string
+          payment_method?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_transactions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payroll_records: {
+        Row: {
+          base_amount: number
+          bonus: number
+          created_at: string
+          deductions: number
+          employee_id: string
+          id: string
+          net_amount: number
+          notes: string | null
+          paid_at: string | null
+          paid_by: string | null
+          payment_method: string | null
+          reference_month: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          base_amount?: number
+          bonus?: number
+          created_at?: string
+          deductions?: number
+          employee_id: string
+          id?: string
+          net_amount?: number
+          notes?: string | null
+          paid_at?: string | null
+          paid_by?: string | null
+          payment_method?: string | null
+          reference_month: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          base_amount?: number
+          bonus?: number
+          created_at?: string
+          deductions?: number
+          employee_id?: string
+          id?: string
+          net_amount?: number
+          notes?: string | null
+          paid_at?: string | null
+          paid_by?: string | null
+          payment_method?: string | null
+          reference_month?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_records_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_records_paid_by_fkey"
+            columns: ["paid_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           active: boolean
           created_at: string
+          hire_date: string | null
           id: string
           name: string
+          permission_level: string
+          permissions: Json
           role: string
+          salary: number | null
         }
         Insert: {
           active?: boolean
           created_at?: string
+          hire_date?: string | null
           id: string
           name: string
+          permission_level?: string
+          permissions?: Json
           role?: string
+          salary?: number | null
         }
         Update: {
           active?: boolean
           created_at?: string
+          hire_date?: string | null
           id?: string
           name?: string
+          permission_level?: string
+          permissions?: Json
           role?: string
+          salary?: number | null
         }
         Relationships: []
       }

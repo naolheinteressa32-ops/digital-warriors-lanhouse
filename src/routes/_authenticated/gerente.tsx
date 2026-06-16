@@ -13,6 +13,8 @@ import { AnalyticsTab } from "@/components/dashboard/AnalyticsTab";
 import { MovimentoTab } from "@/components/dashboard/MovimentoTab";
 import { CaixaTab } from "@/components/dashboard/CaixaTab";
 import { RelatoriosInternosTab } from "@/components/dashboard/RelatoriosInternosTab";
+import { FolhaPagamentoTab } from "@/components/dashboard/FolhaPagamentoTab";
+import { FinanceiroGerencialTab } from "@/components/dashboard/FinanceiroGerencialTab";
 
 export const Route = createFileRoute("/_authenticated/gerente")({
   head: () => ({ meta: [{ title: "Gerência — Digital Warriors Manager" }] }),
@@ -38,6 +40,8 @@ function GerentePage() {
           <TabsTrigger value="staff">Funcionários</TabsTrigger>
           <TabsTrigger value="finance">Financeiro</TabsTrigger>
           <TabsTrigger value="caixa">Caixa</TabsTrigger>
+          <TabsTrigger value="payroll">Folha</TabsTrigger>
+          <TabsTrigger value="fin-mgmt">Gerencial</TabsTrigger>
           <TabsTrigger value="reports-internal">Relatórios Internos</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
           <TabsTrigger value="reports">Relatórios</TabsTrigger>
@@ -52,6 +56,8 @@ function GerentePage() {
         <TabsContent value="staff"><FuncionariosTab /></TabsContent>
         <TabsContent value="finance"><FinanceiroTab /></TabsContent>
         <TabsContent value="caixa"><CaixaTab /></TabsContent>
+        <TabsContent value="payroll"><FolhaPagamentoTab /></TabsContent>
+        <TabsContent value="fin-mgmt"><FinanceiroGerencialTab /></TabsContent>
         <TabsContent value="reports-internal"><RelatoriosInternosTab /></TabsContent>
         <TabsContent value="history"><HistoricoTab /></TabsContent>
         <TabsContent value="reports"><RelatoriosTab /></TabsContent>
