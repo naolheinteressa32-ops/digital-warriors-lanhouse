@@ -27,8 +27,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(s?.user ?? null);
       if (s?.user) {
         setTimeout(() => {
-          supabase.from("profiles").select("*").eq("id", s.user.id).maybeSingle()
-            .then(({ data }) => setProfile(data ?? null));
+          supabase.from("profiles").select("id,name,role,active,created_at").eq("id", s.user.id).maybeSingle()
+            .then(({ data }) => setProfile((data ?? null) as Profile | null));
         }, 0);
       } else {
         setProfile(null);
@@ -39,8 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        supabase.from("profiles").select("*").eq("id", s.user.id).maybeSingle()
-          .then(({ data }) => setProfile(data ?? null))
+        supabase.from("profiles").select("id,name,role,active,created_at").eq("id", s.user.id).maybeSingle()
+          .then(({ data }) => setProfile((data ?? null) as Profile | null))
           .then(() => setLoading(false));
       } else {
         setLoading(false);

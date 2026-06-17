@@ -462,7 +462,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_employees_admin: {
+        Args: never
+        Returns: {
+          active: boolean
+          created_at: string
+          hire_date: string
+          id: string
+          name: string
+          permission_level: string
+          permissions: Json
+          role: string
+          salary: number
+        }[]
+      }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
+      update_employee_admin: {
+        Args: {
+          _employee_id: string
+          _hire_date: string
+          _permission_level: string
+          _permissions: Json
+          _salary: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
