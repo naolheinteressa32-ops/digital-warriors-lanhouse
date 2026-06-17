@@ -8,16 +8,32 @@ export function useCustomers() {
 
   useEffect(() => {
     let mounted = true;
-    const load = async () => {
-      const { data } = await supabase.from("customers").select("*").order("name");
-      if (mounted && data) setCustomers(data);
-      if (mounted) setLoading(false);
+
+    const fetchAll = async () => {
+      const { data: rows } = await supabase
+        .from("customers")
+        .select("*")
+        .order("name");
+
+      if (mounted && rows) setCustomers(rows);
+      setLoading(false);
     };
-    load();
+
+    fetchAll();
 
     const channel = supabase
       .channel("customers-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "customers" }, () => load())
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "customers",
+        },
+        () => {
+          fetchAll();
+        }
+      )
       .subscribe();
 
     return () => {
