@@ -1,54 +1,34 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@/types";
 
 export function useSessionHistory(days = 30) {
-  const [sessions, setSessions] = useState<any[]>([]);
+  const [data, setData] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
-
     const fetchAll = async () => {
       setLoading(true);
       const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
       const { data: rows, error: err } = await supabase
-        .from("sessions")
-        .select("*")
+        .from("sessions").select("*")
         .gte("started_at", since)
         .order("started_at", { ascending: false })
         .limit(2000);
-
-      if (mounted) {
-        if (err) setError(err.message);
-        else setSessions(rows ?? []);
-        setLoading(false);
-      }
+      if (!mounted) return;
+      if (err) setError(err.message);
+      else setData(rows ?? []);
+      setLoading(false);
     };
-
     fetchAll();
-
-    // ✅ PADRÃO CORRETO: .on() ANTES de .subscribe()
     const channel = supabase
       .channel(`session-history-${days}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "sessions",
-        },
-        () => {
-          fetchAll();
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "sessions" }, () => fetchAll())
       .subscribe();
-
-    return () => {
-      mounted = false;
-      supabase.removeChannel(channel);
-    };
+    return () => { mounted = false; supabase.removeChannel(channel); };
   }, [days]);
 
-  return { sessions, loading, error };
+  return { sessions: data, loading, error };
 }
