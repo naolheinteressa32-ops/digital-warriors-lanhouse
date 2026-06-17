@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { WaitingListRow } from "@/types";
 
 export function useWaitingList() {
-  const [waiting, setWaiting] = useState<WaitingListRow[]>([]);
+  const [waiting, setWaiting] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
