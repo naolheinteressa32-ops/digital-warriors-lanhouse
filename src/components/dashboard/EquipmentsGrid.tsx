@@ -4,13 +4,18 @@ import { useActiveSessions } from "@/hooks/useSessions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { SessionTimer } from "@/components/sessions/SessionTimer";
 import { StartSessionDialog } from "@/components/sessions/StartSessionDialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { EquipmentDialog } from "@/components/dashboard/EquipmentDialog";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { Equipment, EquipmentStatus, EquipmentType } from "@/types";
-import { Monitor, Gamepad2, Search, Play, Square, Loader2, Wrench } from "lucide-react";
+import { Monitor, Gamepad2, Search, Play, Square, Loader2, Wrench, Plus, Pencil, Power, PowerOff } from "lucide-react";
 import { formatBRL } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,12 +24,12 @@ type FilterType = "all" | EquipmentType;
 type FilterStatus = "all" | EquipmentStatus;
 
 interface Props {
-  /** If true, shows the "Em manutenção" toggle button (manager-only). */
+  /** Manager mode: shows maintenance toggle, add/edit/disable actions, and inactive equipment. */
   allowMaintenance?: boolean;
 }
 
 export function EquipmentsGrid({ allowMaintenance = false }: Props) {
-  const { equipments, loading } = useEquipments();
+  const { equipments, loading } = useEquipments({ includeInactive: allowMaintenance });
   const { sessions } = useActiveSessions();
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<FilterType>("all");
@@ -32,6 +37,9 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
   const [startTarget, setStartTarget] = useState<Equipment | null>(null);
   const [endTarget, setEndTarget] = useState<Equipment | null>(null);
   const [ending, setEnding] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Equipment | null>(null);
+  const [disableTarget, setDisableTarget] = useState<Equipment | null>(null);
 
   const sessionByEquipId = useMemo(() => {
     const m = new Map<string, typeof sessions[number]>();
@@ -74,6 +82,14 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
     else toast.success(next === "maintenance" ? "Marcado em manutenção" : "Liberado");
   };
 
+  const toggleActive = async (e: Equipment) => {
+    if (e.active && e.status === "in_use") { toast.error("Equipamento em uso"); return; }
+    const { error } = await supabase.from("equipments").update({ active: !e.active }).eq("id", e.id);
+    if (error) toast.error("Erro", { description: error.message });
+    else toast.success(e.active ? "Equipamento desativado" : "Equipamento reativado");
+    setDisableTarget(null);
+  };
+
   return (
     <div className="space-y-4">
       <Card className="p-4 rounded-xl">
@@ -82,7 +98,7 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
             <Input className="pl-9" placeholder="Buscar equipamento..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap items-center">
             <Tabs value={filterType} onValueChange={(v) => setFilterType(v as FilterType)}>
               <TabsList>
                 <TabsTrigger value="all">Todos</TabsTrigger>
@@ -98,6 +114,11 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
                 <TabsTrigger value="maintenance">Manutenção</TabsTrigger>
               </TabsList>
             </Tabs>
+            {allowMaintenance && (
+              <Button size="sm" className="rounded-lg" onClick={() => { setEditing(null); setDialogOpen(true); }}>
+                <Plus className="size-4 mr-2" /> Adicionar Equipamento
+              </Button>
+            )}
           </div>
         </div>
       </Card>
@@ -111,17 +132,21 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
           {filtered.map((e) => {
             const session = sessionByEquipId.get(e.id);
             const expired = session ? new Date(session.ends_at).getTime() <= Date.now() : false;
+            const inactive = !e.active;
             return (
-              <Card key={e.id} className={`p-5 rounded-xl space-y-3 ${expired ? "ring-2 ring-destructive" : ""}`}>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
+              <Card key={e.id} className={`p-5 rounded-xl space-y-3 ${expired ? "ring-2 ring-destructive" : ""} ${inactive ? "opacity-60" : ""}`}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     {e.type === "computer" ? <Monitor className="size-5 text-primary" /> : <Gamepad2 className="size-5 text-primary" />}
-                    <div>
-                      <div className="font-semibold">{e.name}</div>
-                      <div className="text-xs text-muted-foreground">{e.specs}</div>
+                    <div className="min-w-0">
+                      <div className="font-semibold truncate">{e.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">{e.specs}</div>
                     </div>
                   </div>
-                  <StatusBadge status={e.status as EquipmentStatus} />
+                  <div className="flex flex-col items-end gap-1">
+                    <StatusBadge status={e.status as EquipmentStatus} />
+                    {inactive && <Badge variant="outline" className="text-[10px]">Desativado</Badge>}
+                  </div>
                 </div>
                 <div className="text-sm text-muted-foreground">{formatBRL(Number(e.hourly_rate))} / hora</div>
                 {session && (
@@ -134,7 +159,7 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
                   </div>
                 )}
                 <div className="pt-1 space-y-2">
-                  {e.status === "free" && (
+                  {!inactive && e.status === "free" && (
                     <Button size="sm" className="w-full rounded-lg" onClick={() => setStartTarget(e)}>
                       <Play className="size-4 mr-2" /> Iniciar Sessão
                     </Button>
@@ -144,14 +169,24 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
                       <Square className="size-4 mr-2" /> Encerrar Sessão
                     </Button>
                   )}
-                  {e.status === "maintenance" && (
+                  {!inactive && e.status === "maintenance" && (
                     <Button size="sm" variant="outline" className="w-full rounded-lg" disabled>Em manutenção</Button>
                   )}
-                  {allowMaintenance && e.status !== "in_use" && (
-                    <Button size="sm" variant="ghost" className="w-full rounded-lg" onClick={() => toggleMaintenance(e)}>
-                      <Wrench className="size-4 mr-2" />
-                      {e.status === "maintenance" ? "Liberar" : "Manutenção"}
-                    </Button>
+                  {allowMaintenance && (
+                    <div className="flex flex-wrap gap-2">
+                      {!inactive && e.status !== "in_use" && (
+                        <Button size="sm" variant="ghost" className="flex-1 rounded-lg" onClick={() => toggleMaintenance(e)}>
+                          <Wrench className="size-4 mr-1" />
+                          {e.status === "maintenance" ? "Liberar" : "Manutenção"}
+                        </Button>
+                      )}
+                      <Button size="sm" variant="ghost" className="flex-1 rounded-lg" onClick={() => { setEditing(e); setDialogOpen(true); }}>
+                        <Pencil className="size-4 mr-1" /> Editar
+                      </Button>
+                      <Button size="sm" variant="ghost" className="flex-1 rounded-lg" onClick={() => setDisableTarget(e)}>
+                        {inactive ? <><Power className="size-4 mr-1" /> Reativar</> : <><PowerOff className="size-4 mr-1 text-destructive" /> Desativar</>}
+                      </Button>
+                    </div>
                   )}
                 </div>
               </Card>
@@ -161,6 +196,7 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
       )}
 
       <StartSessionDialog equipment={startTarget} open={!!startTarget} onOpenChange={(o) => !o && setStartTarget(null)} />
+      <EquipmentDialog open={dialogOpen} onOpenChange={setDialogOpen} equipment={editing} />
 
       <AlertDialog open={!!endTarget} onOpenChange={(o) => !o && setEndTarget(null)}>
         <AlertDialogContent className="rounded-xl">
@@ -177,6 +213,27 @@ export function EquipmentsGrid({ allowMaintenance = false }: Props) {
             <AlertDialogCancel disabled={ending}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleEndSession} disabled={ending}>
               {ending && <Loader2 className="size-4 mr-2 animate-spin" />}Encerrar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!disableTarget} onOpenChange={(o) => !o && setDisableTarget(null)}>
+        <AlertDialogContent className="rounded-xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {disableTarget?.active ? "Desativar equipamento?" : "Reativar equipamento?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {disableTarget?.active
+                ? "O equipamento ficará oculto para novas sessões mas o histórico será preservado."
+                : "O equipamento voltará a aparecer como disponível para sessões."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => disableTarget && toggleActive(disableTarget)}>
+              Confirmar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

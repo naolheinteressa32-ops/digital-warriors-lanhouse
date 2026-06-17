@@ -15,6 +15,7 @@ import { CaixaTab } from "@/components/dashboard/CaixaTab";
 import { RelatoriosInternosTab } from "@/components/dashboard/RelatoriosInternosTab";
 import { FolhaPagamentoTab } from "@/components/dashboard/FolhaPagamentoTab";
 import { FinanceiroGerencialTab } from "@/components/dashboard/FinanceiroGerencialTab";
+import { WaitingQueueAlert } from "@/components/dashboard/WaitingQueueAlert";
 
 export const Route = createFileRoute("/_authenticated/gerente")({
   head: () => ({ meta: [{ title: "Gerência — Digital Warriors Manager" }] }),
@@ -28,6 +29,8 @@ function GerentePage() {
         <h1 className="text-2xl font-bold">Gerência</h1>
         <p className="text-sm text-muted-foreground">Visão completa da operação Digital Warriors</p>
       </div>
+
+      <WaitingQueueAlert />
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="flex w-full overflow-x-auto flex-nowrap md:flex-wrap h-auto justify-start">

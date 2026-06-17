@@ -8,6 +8,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { SessionAutoCloser } from "@/components/system/SessionAutoCloser";
 import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
@@ -74,6 +75,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
+          <SessionAutoCloser />
           <Outlet />
           <Toaster richColors position="top-right" />
         </AuthProvider>

@@ -9,6 +9,7 @@ import { HistoricoTab } from "@/components/dashboard/HistoricoTab";
 import { MovimentoTab } from "@/components/dashboard/MovimentoTab";
 import { CaixaTab } from "@/components/dashboard/CaixaTab";
 import { RelatoriosInternosTab } from "@/components/dashboard/RelatoriosInternosTab";
+import { WaitingQueueAlert } from "@/components/dashboard/WaitingQueueAlert";
 
 export const Route = createFileRoute("/_authenticated/atendente")({
   head: () => ({ meta: [{ title: "Atendimento — Digital Warriors Manager" }] }),
@@ -22,6 +23,8 @@ function AtendentePage() {
         <h1 className="text-2xl font-bold">Atendimento</h1>
         <p className="text-sm text-muted-foreground">Dashboard do atendente — gerencie sessões em tempo real</p>
       </div>
+
+      <WaitingQueueAlert />
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="flex w-full overflow-x-auto flex-nowrap md:flex-wrap h-auto justify-start">
