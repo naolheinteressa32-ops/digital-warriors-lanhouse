@@ -30,6 +30,12 @@ export function FuncionariosTab() {
   const { sessions } = useFinishedSessions(30);
   const { user, role } = useAuth();
   const canManage = role === "manager";
+  const { rows: adminRows } = useEmployeesAdmin(canManage);
+  const adminById = useMemo(() => {
+    const m = new Map<string, typeof adminRows[number]>();
+    for (const r of adminRows) m.set(r.id, r);
+    return m;
+  }, [adminRows]);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [editing, setEditing] = useState<Profile | null>(null);
   const [editForm, setEditForm] = useState<any>({});
@@ -65,26 +71,26 @@ export function FuncionariosTab() {
   };
 
   const openEdit = (p: Profile) => {
-    const ext = p as any;
+    const ext = adminById.get(p.id);
     setEditing(p);
     setEditForm({
-      salary: ext.salary ?? "",
-      hire_date: ext.hire_date ?? "",
-      permission_level: ext.permission_level ?? "standard",
-      permissions: ext.permissions ?? {},
+      salary: ext?.salary ?? "",
+      hire_date: ext?.hire_date ?? "",
+      permission_level: ext?.permission_level ?? "standard",
+      permissions: ext?.permissions ?? {},
     });
   };
 
   const saveEdit = async () => {
     if (!editing) return;
     setSaving(true);
-    const payload: any = {
-      salary: editForm.salary === "" ? null : Number(editForm.salary),
-      hire_date: editForm.hire_date || null,
-      permission_level: editForm.permission_level,
-      permissions: editForm.permissions ?? {},
-    };
-    const { error } = await (supabase as any).from("profiles").update(payload).eq("id", editing.id);
+    const { error } = await (supabase as any).rpc("update_employee_admin", {
+      _employee_id: editing.id,
+      _salary: editForm.salary === "" ? null : Number(editForm.salary),
+      _hire_date: editForm.hire_date || null,
+      _permission_level: editForm.permission_level,
+      _permissions: editForm.permissions ?? {},
+    });
     setSaving(false);
     if (error) toast.error("Erro", { description: error.message });
     else {
@@ -96,28 +102,33 @@ export function FuncionariosTab() {
   if (loading) return <div className="flex items-center justify-center py-20"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>;
   if (profiles.length === 0) return <Card className="p-12 rounded-xl text-center text-muted-foreground">Nenhum funcionário cadastrado.</Card>;
 
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {profiles.map((p) => {
           const stats = byAttendant.get(p.id);
           const busy = updatingId === p.id;
-          const ext = p as any;
+          const ext = adminById.get(p.id);
           return (
             <Card key={p.id} className={`p-5 rounded-xl space-y-3 ${p.active ? "" : "opacity-60"}`}>
               <div className="flex items-start gap-3">
                 <div className="size-10 rounded-full bg-primary/15 text-primary flex items-center justify-center"><UserCog className="size-5" /></div>
                 <div className="min-w-0 flex-1">
                   <div className="font-semibold truncate">{p.name}</div>
-                  <div className="text-xs text-muted-foreground capitalize">{p.role === "manager" ? "Gerente" : "Atendente"} • {p.active ? "Ativo" : "Inativo"} • {ext.permission_level ?? "standard"}</div>
+                  <div className="text-xs text-muted-foreground capitalize">{p.role === "manager" ? "Gerente" : "Atendente"} • {p.active ? "Ativo" : "Inativo"}{canManage ? ` • ${ext?.permission_level ?? "standard"}` : ""}</div>
                 </div>
                 {busy && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
               </div>
               <div className="text-sm space-y-1 border-t border-border pt-3">
                 <div className="flex justify-between"><span className="text-muted-foreground">Sessões (30d):</span><span className="font-medium">{stats?.count ?? 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Receita gerada:</span><span className="font-medium">{formatBRL(stats?.revenue ?? 0)}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Salário:</span><span className="font-medium">{ext.salary != null ? formatBRL(Number(ext.salary)) : "—"}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Contratação:</span><span className="text-xs">{ext.hire_date ?? "—"}</span></div>
+                {canManage && (
+                  <>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Salário:</span><span className="font-medium">{ext?.salary != null ? formatBRL(Number(ext.salary)) : "—"}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Contratação:</span><span className="text-xs">{ext?.hire_date ?? "—"}</span></div>
+                  </>
+                )}
                 <div className="flex justify-between"><span className="text-muted-foreground">Cadastrado:</span><span className="text-xs">{formatDateTime(p.created_at)}</span></div>
               </div>
               {canManage && (
