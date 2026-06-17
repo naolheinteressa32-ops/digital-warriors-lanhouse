@@ -1,19 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
-export type FinancialTransaction = {
-  id: string;
-  type: "income" | "expense" | string;
-  category: string;
-  description: string;
-  amount: number;
-  occurred_at: string;
-  payment_method: string | null;
-  created_by: string | null;
-  notes: string | null;
-  created_at: string;
-  updated_at: string;
-};
+import type { FinancialTransaction } from "@/types";
 
 export function useFinancialTransactions() {
   const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
@@ -21,22 +8,39 @@ export function useFinancialTransactions() {
 
   useEffect(() => {
     let mounted = true;
+
     const fetchAll = async () => {
-      const { data } = await (supabase as any)
+      const { data: rows } = await supabase
         .from("financial_transactions")
         .select("*")
         .order("occurred_at", { ascending: false })
         .limit(1000);
-      if (!mounted) return;
-      setTransactions(data ?? []);
+
+      if (mounted && rows) setTransactions(rows);
       setLoading(false);
     };
+
     fetchAll();
+
     const channel = supabase
-      .channel("fin-tx-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "financial_transactions" }, () => fetchAll())
+      .channel("fin-ta-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "financial_transactions",
+        },
+        () => {
+          fetchAll();
+        }
+      )
       .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+
+    return () => {
+      mounted = false;
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return { transactions, loading };
