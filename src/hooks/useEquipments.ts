@@ -13,16 +13,26 @@ export function useEquipments(opts: { includeInactive?: boolean } = {}) {
       let q = supabase.from("equipments").select("*").order("name");
       if (!includeInactive) q = q.eq("active", true);
       const { data: rows } = await q;
+
       if (mounted && rows) setData(rows);
       setLoading(false);
     };
+
     fetchAll();
 
     const channel = supabase
       .channel(`equipments-changes-${includeInactive ? "all" : "active"}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "equipments" }, () => {
-        fetchAll();
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "equipments",
+        },
+        () => {
+          fetchAll();
+        }
+      )
       .subscribe();
 
     return () => {
