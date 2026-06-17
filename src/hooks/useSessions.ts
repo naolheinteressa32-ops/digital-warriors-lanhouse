@@ -3,25 +3,37 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Session } from "@/types";
 
 export function useActiveSessions() {
-  const [data, setData] = useState<Session[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
+
     const fetchAll = async () => {
       const { data: rows } = await supabase
-        .from("sessions").select("*").eq("status", "active")
-        .order("started_at", { ascending: false });
-      if (mounted && rows) setData(rows);
+        .from("sessions")
+        .select("*")
+        .eq("status", "active");
+
+      if (mounted && rows) setSessions(rows);
       setLoading(false);
     };
+
     fetchAll();
 
     const channel = supabase
       .channel("sessions-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "sessions" }, () => {
-        fetchAll();
-      })
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "sessions",
+        },
+        () => {
+          fetchAll();
+        }
+      )
       .subscribe();
 
     return () => {
@@ -30,5 +42,5 @@ export function useActiveSessions() {
     };
   }, []);
 
-  return { sessions: data, loading };
+  return { sessions, loading };
 }
