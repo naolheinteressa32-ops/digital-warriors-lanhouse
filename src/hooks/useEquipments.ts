@@ -19,7 +19,7 @@ export function useEquipments(opts: { includeInactive?: boolean } = {}) {
     fetchAll();
 
     const channel = supabase
-      .channel(`equipments-changes-${includeInactive ? "all" : "active"}`)
+      .channel(`equipments-changes-${includeInactive ? "all" : "active"}-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "equipments" }, () => {
         fetchAll();
       })
