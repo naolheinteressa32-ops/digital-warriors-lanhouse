@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 import type { CashRegister } from "@/types";
 
 export function useCashRegisters() {
@@ -19,11 +20,12 @@ export function useCashRegisters() {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel("cash-registers-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "cash_registers" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      "cash-registers-changes",
+      { event: "*", schema: "public", table: "cash_registers" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, []);
 
   return { registers: data, loading };

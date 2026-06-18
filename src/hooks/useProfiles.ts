@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 import type { Profile } from "@/types";
 
 // Note: sensitive columns (salary, hire_date, permission_level, permissions)
@@ -19,11 +20,12 @@ export function useProfiles() {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel("profiles-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      "profiles-changes",
+      { event: "*", schema: "public", table: "profiles" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, []);
 
   return { profiles: data, loading };
@@ -55,11 +57,12 @@ export function useEmployeesAdmin(enabled: boolean) {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel("profiles-admin-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      "profiles-admin-changes",
+      { event: "*", schema: "public", table: "profiles" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, [enabled]);
 
   return { rows, loading };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 import type { Session } from "@/types";
 
 export function useFinishedSessions(days = 30) {
@@ -24,11 +25,12 @@ export function useFinishedSessions(days = 30) {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel(`finished-sessions-${days}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "sessions" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      `finished-sessions-${days}`,
+      { event: "*", schema: "public", table: "sessions" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, [days]);
 
   return { sessions: data, loading, error };
