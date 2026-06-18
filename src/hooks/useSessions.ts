@@ -18,7 +18,7 @@ export function useActiveSessions() {
     fetchAll();
 
     const channel = supabase
-      .channel("sessions-changes")
+      .channel(`sessions-changes-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "sessions" }, () => {
         fetchAll();
       })
