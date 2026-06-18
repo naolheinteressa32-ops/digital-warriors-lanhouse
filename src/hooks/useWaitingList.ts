@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 import type { WaitingListRow } from "@/types";
 
 export function useWaitingList() {
@@ -15,11 +16,12 @@ export function useWaitingList() {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel("waiting-list-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "waiting_list" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      "waiting-list-changes",
+      { event: "*", schema: "public", table: "waiting_list" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, []);
 
   return { waiting: data, loading };
