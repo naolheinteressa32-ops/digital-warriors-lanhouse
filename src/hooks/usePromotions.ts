@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 import type { Database } from "@/integrations/supabase/types";
 
 export type Promotion = Database["public"]["Tables"]["promotions"]["Row"];
@@ -19,11 +20,12 @@ export function usePromotions() {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel("promotions-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "promotions" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      "promotions-changes",
+      { event: "*", schema: "public", table: "promotions" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, []);
 
   return { promotions: data, loading };

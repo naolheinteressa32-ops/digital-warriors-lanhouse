@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 import type { Equipment } from "@/types";
 
 export function useEquipments(opts: { includeInactive?: boolean } = {}) {
@@ -18,16 +19,15 @@ export function useEquipments(opts: { includeInactive?: boolean } = {}) {
     };
     fetchAll();
 
-    const channel = supabase
-      .channel(`equipments-changes-${includeInactive ? "all" : "active"}-${Math.random().toString(36).slice(2)}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "equipments" }, () => {
-        fetchAll();
-      })
-      .subscribe();
+    const unsubscribe = subscribeToPostgresChanges(
+      `equipments-changes-${includeInactive ? "all" : "active"}`,
+      { event: "*", schema: "public", table: "equipments" },
+      () => { fetchAll(); },
+    );
 
     return () => {
       mounted = false;
-      supabase.removeChannel(channel);
+      unsubscribe();
     };
   }, [includeInactive]);
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeToPostgresChanges } from "@/hooks/useRealtimeSubscription";
 
 export type PayrollRecord = {
   id: string;
@@ -35,11 +36,12 @@ export function usePayroll() {
       setLoading(false);
     };
     fetchAll();
-    const channel = supabase
-      .channel("payroll-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "payroll_records" }, () => fetchAll())
-      .subscribe();
-    return () => { mounted = false; supabase.removeChannel(channel); };
+    const unsubscribe = subscribeToPostgresChanges(
+      "payroll-changes",
+      { event: "*", schema: "public", table: "payroll_records" },
+      () => fetchAll(),
+    );
+    return () => { mounted = false; unsubscribe(); };
   }, []);
 
   return { records, loading };
