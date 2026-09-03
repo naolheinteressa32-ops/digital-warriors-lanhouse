@@ -1,10 +1,9 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { LayoutDashboard, LogOut, Users, BarChart3, Menu } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Menu } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import { ThemeToggle } from "./ThemeToggle";
 
