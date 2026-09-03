@@ -42,7 +42,7 @@ export function SessionAutoCloser() {
     tick();
     const id = setInterval(tick, 5_000);
     return () => clearInterval(id);
-  }, [sessions, user]);
+  }, [sessions]);
 
   return null;
 }

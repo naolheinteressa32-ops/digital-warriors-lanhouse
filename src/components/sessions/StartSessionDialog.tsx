@@ -157,7 +157,7 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
       paymentMethod,
       cashReceived: paymentMethod === "cash" ? cashReceived : undefined,
       change: paymentMethod === "cash" ? change : undefined,
-      attendantName: profile?.name ?? user.email ?? "—",
+      attendantName: profile?.name ?? "—",
       startedAt: now.toISOString(),
       endsAt: endsAt.toISOString(),
     });
