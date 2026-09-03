@@ -60,14 +60,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate">{profile?.name}</div>
-            <div className="text-xs text-muted-foreground capitalize">
-              {role === "manager" ? "Gerente" : "Atendente"}
-            </div>
+            <div className="text-xs text-muted-foreground">Acesso livre</div>
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="w-full justify-start mt-2 rounded-lg" onClick={handleSignOut}>
-          <LogOut className="size-4 mr-2" /> Sair
-        </Button>
       </div>
     </>
   );
