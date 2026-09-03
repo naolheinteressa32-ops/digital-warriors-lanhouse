@@ -68,9 +68,9 @@ export function CaixaTab() {
   return (
     <div className="space-y-4">
       {!myOpen ? (
-        <OpenCaixaCard userId={user!.id} />
+        <OpenCaixaCard />
       ) : (
-        <CloseCaixaCard reg={myOpen} expected={expectedCash} userId={user!.id} />
+        <CloseCaixaCard reg={myOpen} expected={expectedCash} />
       )}
 
       {isManager && (
