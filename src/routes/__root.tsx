@@ -54,7 +54,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       <div className="text-center">
         <h1 className="text-4xl font-bold">404</h1>
         <p className="text-muted-foreground mt-2">Página não encontrada</p>
-        <a href="/login" className="inline-block mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Voltar ao início</a>
+        <a href="/atendente" className="inline-block mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Voltar ao início</a>
       </div>
     </div>
   ),

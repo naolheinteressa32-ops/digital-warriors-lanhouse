@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useActiveSessions } from "@/hooks/useSessions";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -11,12 +10,10 @@ import { toast } from "sonner";
  * write succeeds, and we de-dupe locally via `closing` ref.
  */
 export function SessionAutoCloser() {
-  const { user } = useAuth();
   const { sessions } = useActiveSessions();
   const closing = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    if (!user) return;
     const tick = async () => {
       const now = Date.now();
       const expired = sessions.filter(

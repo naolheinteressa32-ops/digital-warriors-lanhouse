@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import type { CashRegister } from "@/types";
 
 export function CaixaTab() {
-  const { user, role } = useAuth();
+  const { role } = useAuth();
   const isManager = role === "manager";
   const { registers, loading } = useCashRegisters();
   const { profiles } = useProfiles();
@@ -27,8 +27,8 @@ export function CaixaTab() {
   }, [profiles]);
 
   const myOpen = useMemo(
-    () => registers.find((r) => r.attendant_id === user?.id && r.status === "open") ?? null,
-    [registers, user?.id],
+    () => registers.find((r) => r.status === "open") ?? null,
+    [registers],
   );
 
   // Expected cash for the currently-open caixa = opening + sum of cash sessions finished since opening
@@ -40,7 +40,6 @@ export function CaixaTab() {
       const { data: rows } = await supabase
         .from("sessions")
         .select("value, discount, payment_method, attendant_id, ended_at, status")
-        .eq("attendant_id", myOpen.attendant_id)
         .eq("status", "finished")
         .eq("payment_method", "cash")
         .gte("ended_at", myOpen.opened_at);
@@ -113,7 +112,7 @@ export function CaixaTab() {
                   const diffClass = r.status === "open" ? "text-muted-foreground" : diff === 0 ? "text-emerald-500" : diff > 0 ? "text-primary" : "text-destructive";
                   return (
                     <tr key={r.id} className="border-t border-border">
-                      {isManager && <td className="p-2">{profileMap.get(r.attendant_id) ?? "—"}</td>}
+                      {isManager && <td className="p-2">{profileMap.get(r.attendant_id ?? "") ?? "—"}</td>}
                       <td className="p-2">{formatDateTime(r.opened_at)}</td>
                       <td className="p-2">{formatDateTime(r.closed_at)}</td>
                       <td className="p-2 text-right">{formatBRL(Number(r.opening_amount))}</td>
@@ -148,7 +147,7 @@ function Mini({ label, value }: { label: string; value: string }) {
   );
 }
 
-function OpenCaixaCard({ userId }: { userId: string }) {
+function OpenCaixaCard() {
   const [opening, setOpening] = useState("0,00");
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
@@ -158,7 +157,7 @@ function OpenCaixaCard({ userId }: { userId: string }) {
     if (!Number.isFinite(value) || value < 0) { toast.error("Valor inicial inválido"); return; }
     setBusy(true);
     const { error } = await supabase.from("cash_registers").insert({
-      attendant_id: userId,
+      attendant_id: null,
       opening_amount: value,
       notes: notes.trim() || null,
     });
@@ -196,7 +195,7 @@ function OpenCaixaCard({ userId }: { userId: string }) {
   );
 }
 
-function CloseCaixaCard({ reg, expected, userId }: { reg: CashRegister; expected: number | null; userId: string }) {
+function CloseCaixaCard({ reg, expected }: { reg: CashRegister; expected: number | null }) {
   const [counted, setCounted] = useState("");
   const [notes, setNotes] = useState(reg.notes ?? "");
   const [busy, setBusy] = useState(false);
@@ -211,7 +210,7 @@ function CloseCaixaCard({ reg, expected, userId }: { reg: CashRegister; expected
     const { error } = await supabase.from("cash_registers").update({
       status: "closed",
       closed_at: new Date().toISOString(),
-      closed_by: userId,
+      closed_by: null,
       expected_amount: exp,
       counted_amount: countedNum,
       difference: diff,

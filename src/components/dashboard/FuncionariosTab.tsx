@@ -28,7 +28,7 @@ const PERMISSION_KEYS = [
 export function FuncionariosTab() {
   const { profiles, loading } = useProfiles();
   const { sessions } = useFinishedSessions(30);
-  const { user, role } = useAuth();
+  const { role } = useAuth();
   const canManage = role === "manager";
   const { rows: adminRows } = useEmployeesAdmin(canManage);
   const adminById = useMemo(() => {
@@ -44,16 +44,16 @@ export function FuncionariosTab() {
   const byAttendant = useMemo(() => {
     const m = new Map<string, { count: number; revenue: number }>();
     for (const s of sessions) {
-      const cur = m.get(s.attendant_id) ?? { count: 0, revenue: 0 };
+      const key = s.attendant_id ?? "";
+      const cur = m.get(key) ?? { count: 0, revenue: 0 };
       cur.count += 1;
       cur.revenue += Number(s.value) - Number(s.discount);
-      m.set(s.attendant_id, cur);
+      m.set(key, cur);
     }
     return m;
   }, [sessions]);
 
   const toggleActive = async (p: Profile, active: boolean) => {
-    if (p.id === user?.id && !active) { toast.error("Você não pode desativar a si mesmo"); return; }
     setUpdatingId(p.id);
     const { error } = await supabase.from("profiles").update({ active }).eq("id", p.id);
     setUpdatingId(null);
@@ -62,7 +62,6 @@ export function FuncionariosTab() {
   };
 
   const changeRole = async (p: Profile, newRole: UserRole) => {
-    if (p.id === user?.id && newRole !== "manager") { toast.error("Você não pode rebaixar a si mesmo"); return; }
     setUpdatingId(p.id);
     const { error } = await supabase.from("profiles").update({ role: newRole }).eq("id", p.id);
     setUpdatingId(null);
