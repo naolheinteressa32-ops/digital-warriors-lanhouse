@@ -16,7 +16,7 @@ export type Database = {
     Tables: {
       cash_registers: {
         Row: {
-          attendant_id: string
+          attendant_id: string | null
           closed_at: string | null
           closed_by: string | null
           counted_amount: number | null
@@ -31,7 +31,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          attendant_id: string
+          attendant_id?: string | null
           closed_at?: string | null
           closed_by?: string | null
           counted_amount?: number | null
@@ -46,7 +46,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          attendant_id?: string
+          attendant_id?: string | null
           closed_at?: string | null
           closed_by?: string | null
           counted_amount?: number | null
@@ -91,7 +91,7 @@ export type Database = {
       }
       employee_reports: {
         Row: {
-          author_id: string
+          author_id: string | null
           created_at: string
           id: string
           message: string
@@ -103,7 +103,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          author_id: string
+          author_id?: string | null
           created_at?: string
           id?: string
           message: string
@@ -115,7 +115,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          author_id?: string
+          author_id?: string | null
           created_at?: string
           id?: string
           message?: string
@@ -351,7 +351,7 @@ export type Database = {
       }
       sessions: {
         Row: {
-          attendant_id: string
+          attendant_id: string | null
           customer_id: string | null
           customer_name: string | null
           discount: number
@@ -369,7 +369,7 @@ export type Database = {
           value: number
         }
         Insert: {
-          attendant_id: string
+          attendant_id?: string | null
           customer_id?: string | null
           customer_name?: string | null
           discount?: number
@@ -387,7 +387,7 @@ export type Database = {
           value: number
         }
         Update: {
-          attendant_id?: string
+          attendant_id?: string | null
           customer_id?: string | null
           customer_name?: string | null
           discount?: number
@@ -405,13 +405,6 @@ export type Database = {
           value?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "sessions_attendant_id_fkey"
-            columns: ["attendant_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "sessions_customer_id_fkey"
             columns: ["customer_id"]

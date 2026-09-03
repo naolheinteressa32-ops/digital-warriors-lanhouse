@@ -8,7 +8,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useFinancialTransactions } from "@/hooks/useFinancialTransactions";
 import { useFinishedSessions } from "@/hooks/useFinishedSessions";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL, formatDateTime } from "@/lib/format";
 import { Plus, Loader2, TrendingUp, TrendingDown, Wallet } from "lucide-react";
@@ -18,7 +17,6 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGri
 export function FinanceiroGerencialTab() {
   const { transactions, loading } = useFinancialTransactions();
   const { sessions } = useFinishedSessions(180);
-  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [filterType, setFilterType] = useState<string>("all");
@@ -93,7 +91,7 @@ export function FinanceiroGerencialTab() {
       payment_method: form.payment_method,
       occurred_at: new Date(form.occurred_at).toISOString(),
       notes: form.notes || null,
-      created_by: user?.id,
+      created_by: null,
     });
     setSaving(false);
     if (error) toast.error("Erro", { description: error.message });

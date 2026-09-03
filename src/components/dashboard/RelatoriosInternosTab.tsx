@@ -28,7 +28,7 @@ const TYPE_ICONS: Record<ReportType, typeof MessageSquare> = {
 };
 
 export function RelatoriosInternosTab() {
-  const { user, role } = useAuth();
+  const { role } = useAuth();
   const isManager = role === "manager";
   const { reports, loading } = useEmployeeReports();
   const { profiles } = useProfiles();
@@ -59,14 +59,14 @@ export function RelatoriosInternosTab() {
     const { error } = await supabase.from("employee_reports").update({
       read,
       read_at: read ? new Date().toISOString() : null,
-      read_by: read ? user?.id ?? null : null,
+      read_by: null,
     }).eq("id", id);
     if (error) toast.error("Erro", { description: error.message });
   };
 
   return (
     <div className="space-y-4">
-      <NewReportCard userId={user!.id} />
+      <NewReportCard />
 
       <Card className="p-5 rounded-xl space-y-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
@@ -121,7 +121,7 @@ export function RelatoriosInternosTab() {
                         )}
                       </div>
                       <div className="text-xs text-muted-foreground mt-1">
-                        {profileMap.get(r.author_id) ?? "—"} • {formatDateTime(r.created_at)}
+                        {profileMap.get(r.author_id ?? "") ?? "—"} • {formatDateTime(r.created_at)}
                       </div>
                       <div className="text-sm mt-2 whitespace-pre-wrap">{r.message}</div>
                     </div>
@@ -144,7 +144,7 @@ export function RelatoriosInternosTab() {
   );
 }
 
-function NewReportCard({ userId }: { userId: string }) {
+function NewReportCard() {
   const [type, setType] = useState<ReportType>("observation");
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
@@ -156,7 +156,7 @@ function NewReportCard({ userId }: { userId: string }) {
     if (message.length > 2000) { toast.error("Mensagem muito longa"); return; }
     setBusy(true);
     const { error } = await supabase.from("employee_reports").insert({
-      author_id: userId,
+      author_id: null,
       type,
       title: title.trim(),
       message: message.trim(),

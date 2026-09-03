@@ -42,7 +42,7 @@ function formatDuration(minutes: number) {
 }
 
 export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
-  const { user, profile } = useAuth();
+  const { profile } = useAuth();
   const { promotions } = usePromotions();
 
   const [step, setStep] = useState<Step>("customer");
@@ -107,7 +107,6 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
   const canContinueTime = totalMinutes >= 5;
 
   const handleConfirmPayment = async () => {
-    if (!user) return;
     if (!cashOk) {
       toast.error("Valor recebido menor que o total");
       return;
@@ -122,7 +121,7 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
       equipment_type: equipment.type,
       customer_id: mode === "registered" ? selectedCustomer!.id : null,
       customer_name: customerName,
-      attendant_id: user.id,
+      attendant_id: null,
       started_at: now.toISOString(),
       ends_at: endsAt.toISOString(),
       duration_minutes: totalMinutes,
@@ -158,7 +157,7 @@ export function StartSessionDialog({ equipment, open, onOpenChange }: Props) {
       paymentMethod,
       cashReceived: paymentMethod === "cash" ? cashReceived : undefined,
       change: paymentMethod === "cash" ? change : undefined,
-      attendantName: profile?.name ?? user.email ?? "—",
+      attendantName: profile?.name ?? "—",
       startedAt: now.toISOString(),
       endsAt: endsAt.toISOString(),
     });

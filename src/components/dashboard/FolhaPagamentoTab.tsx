@@ -17,7 +17,7 @@ import { toast } from "sonner";
 export function FolhaPagamentoTab() {
   const { records, loading } = usePayroll();
   const { profiles } = useProfiles();
-  const { user, role } = useAuth();
+  const { role } = useAuth();
   const isManager = role === "manager";
   const [open, setOpen] = useState(false);
   const [filterEmployee, setFilterEmployee] = useState<string>("all");
@@ -45,10 +45,9 @@ export function FolhaPagamentoTab() {
     return records.filter((r) => {
       if (filterEmployee !== "all" && r.employee_id !== filterEmployee) return false;
       if (filterMonth && !r.reference_month.startsWith(filterMonth)) return false;
-      if (!isManager && r.employee_id !== user?.id) return false;
       return true;
     });
-  }, [records, filterEmployee, filterMonth, isManager, user?.id]);
+  }, [records, filterEmployee, filterMonth, isManager]);
 
   const totals = useMemo(() => {
     let paid = 0, pending = 0;
@@ -80,7 +79,7 @@ export function FolhaPagamentoTab() {
       status: form.status,
       notes: form.notes || null,
       paid_at: form.status === "paid" ? new Date().toISOString() : null,
-      paid_by: form.status === "paid" ? user?.id : null,
+      paid_by: null,
     });
     setSaving(false);
     if (error) toast.error("Erro", { description: error.message });
@@ -94,7 +93,7 @@ export function FolhaPagamentoTab() {
   const markPaid = async (id: string) => {
     const { error } = await (supabase as any)
       .from("payroll_records")
-      .update({ status: "paid", paid_at: new Date().toISOString(), paid_by: user?.id })
+      .update({ status: "paid", paid_at: new Date().toISOString(), paid_by: null })
       .eq("id", id);
     if (error) toast.error("Erro", { description: error.message });
     else toast.success("Pagamento registrado");

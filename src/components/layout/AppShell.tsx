@@ -1,10 +1,9 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { LayoutDashboard, LogOut, Users, BarChart3, Menu } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Menu } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -17,19 +16,13 @@ const NAV: NavItem[] = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { profile, signOut, role } = useAuth();
-  const navigate = useNavigate();
+  const { profile, role } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const items = NAV.filter((n) => role && n.roles.includes(role));
   const initial = profile?.name?.[0]?.toUpperCase() ?? "U";
 
-  const handleSignOut = async () => {
-    await signOut();
-    toast.success("Sessão encerrada");
-    navigate({ to: "/login", replace: true });
-  };
 
   const SidebarBody = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
@@ -66,14 +59,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate">{profile?.name}</div>
-            <div className="text-xs text-muted-foreground capitalize">
-              {role === "manager" ? "Gerente" : "Atendente"}
-            </div>
+            <div className="text-xs text-muted-foreground">Acesso livre</div>
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="w-full justify-start mt-2 rounded-lg" onClick={handleSignOut}>
-          <LogOut className="size-4 mr-2" /> Sair
-        </Button>
       </div>
     </>
   );
