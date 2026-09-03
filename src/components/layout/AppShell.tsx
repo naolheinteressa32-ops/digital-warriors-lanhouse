@@ -17,19 +17,13 @@ const NAV: NavItem[] = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { profile, signOut, role } = useAuth();
-  const navigate = useNavigate();
+  const { profile, role } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const items = NAV.filter((n) => role && n.roles.includes(role));
   const initial = profile?.name?.[0]?.toUpperCase() ?? "U";
 
-  const handleSignOut = async () => {
-    await signOut();
-    toast.success("Sessão encerrada");
-    navigate({ to: "/login", replace: true });
-  };
 
   const SidebarBody = ({ onNavigate }: { onNavigate?: () => void }) => (
     <>
